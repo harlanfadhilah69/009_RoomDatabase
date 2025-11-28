@@ -86,4 +86,22 @@ fun BodyHome(
     listSiswa: List<Siswa>,
     modifier: Modifier = Modifier
 ) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+    ) {
+        if (listSiswa.isEmpty()) {
+            Text(
+                text = stringResource(R.string.deskripsi_no_item),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.titleLarge
+            )
+        } else {
+            ListSiswa(
+                listSiswa = listSiswa,
+                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
+            )
+        }
+    }
 }
+
