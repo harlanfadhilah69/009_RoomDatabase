@@ -1,6 +1,5 @@
 package com.example.room_database.view
 
-import android.icu.text.CaseMap
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -21,20 +20,19 @@ fun SiswaTopAppBar(
     canNavigateBack: Boolean,
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior? = null,
-    navigateUp: () -> Unit ={}
-){
-    CenterAlignedTopAppBar(title= { Text(title) },
+    navigateUp: () -> Unit = {}
+) {
+    CenterAlignedTopAppBar(title = { Text("DETAIL MAHASISWA") },
         modifier = modifier,
         scrollBehavior = scrollBehavior,
         navigationIcon = {
             if (canNavigateBack) {
-                IconButton (onClick = navigateUp) {
+                IconButton(onClick = navigateUp) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.back)
                     )
                 }
             }
-        }
-    )
+        })
 }
