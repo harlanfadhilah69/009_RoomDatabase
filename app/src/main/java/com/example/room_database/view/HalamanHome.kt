@@ -71,4 +71,13 @@ fun HomeScreen(
                 )
             }
         }
-    ) {}
+    ) { innerPadding ->
+        BodyHome(
+            listSiswa = homeUiState.listSiswa,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        )
+    }
+}
+
