@@ -26,32 +26,39 @@ fun SiswaApp(navController: NavHostController = rememberNavController(),
     HostNavigasi(navController = navController)
 }
 
+// ... imports
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HostNavigasi(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ){
-    NavHost(navController = navController, startDestination = DestinasiHome.route
-        , modifier = Modifier)
+    NavHost(navController = navController, startDestination = DestinasiHome.route, modifier = Modifier)
     {
         composable(DestinasiHome.route){
             HomeScreen(
-                navigateToItemEntry = { navController.navigate(DestinasiEntry
-                    .route)},
+                navigateToItemEntry = { navController.navigate(DestinasiEntry.route) },
+                navigateToItemUpdate = { id ->
+                    // 7. Implementasi navigasi ke Detail/Update dengan membawa ID
+                    navController.navigate("${DestinasiDetailSiswa.route}/$id")
+                }
             )
         }
+        // ... (composable lainnya tetap sama)
         composable(DestinasiEntry.route){
-            EntrySiswaScreen(navigateBack = { navController.popBackStack()})
+            EntrySiswaScreen(navigateBack = { navController.popBackStack() })
         }
 
-        composable ( route = DestinasiDetailSiswa.routeWithArgs,
-        arguments = listOf(navArgument(name = itemIdArg){
-        type = NavType.IntType
-        })
-        ){
-        DetailSiswaScreen(
-            navigateBack = {navController.navigateUp()})
+        composable (
+            route = DestinasiDetailSiswa.routeWithArgs,
+            arguments = listOf(navArgument(name = DestinasiDetailSiswa.itemIdArg){
+                type = NavType.IntType
+            })
+        ) {
+            DetailSiswaScreen(
+                navigateBack = { navController.navigateUp() }
+            )
         }
     }
 }

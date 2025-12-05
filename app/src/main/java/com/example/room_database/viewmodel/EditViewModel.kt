@@ -1,4 +1,7 @@
 package com.example.room_database.viewmodel
 
-class EditViewModel {
+import androidx.lifecycle.SavedStateHandle
+import com.example.room_database.repositori.AplikasiSiswa
+
+class EditViewModel(SavedStateHandle: SavedStateHandle, repositoriSiswa: AplikasiSiswa) {
 }

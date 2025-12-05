@@ -1,8 +1,10 @@
 package com.example.room_database.view
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -34,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.room.Update
 import com.example.a20230140027_roomdatabase.viewmodel.HomeViewModel
 import com.example.room_database.viewmodel.provider.PenyediaViewModel
 
@@ -45,13 +48,14 @@ import com.example.room_database.view.route.DestinasiHome
 @Composable
 fun HomeScreen(
     navigateToItemEntry: () -> Unit,
+    navigateToItemUpdate: (Int) -> Unit, // 1. Tambahkan parameter ini dengan tipe (Int) -> Unit
+    modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = PenyediaViewModel.Factory)
-) {
+){
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val homeUiState by viewModel.homeUiState.collectAsState()
 
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             SiswaTopAppBar(
                 title = stringResource(DestinasiHome.titleRes),
@@ -66,31 +70,34 @@ fun HomeScreen(
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
             ) {
                 Icon(
-                    imageVector = Icons.Filled.Add,
+                    imageVector = Icons.Default.Add,
                     contentDescription = stringResource(R.string.entry_siswa)
                 )
             }
-        }
+        },
     ) { innerPadding ->
+        val uiStateSiswa by viewModel.homeUiState.collectAsState()
         BodyHome(
-            listSiswa = homeUiState.listSiswa,
+            itemSiswa = uiStateSiswa.listSiswa,
             modifier = Modifier
-                .fillMaxSize()
                 .padding(innerPadding)
+                .fillMaxSize(),
+            onSiswaClick = navigateToItemUpdate // 2. Teruskan fungsi ke BodyHome
         )
     }
 }
 
 @Composable
 fun BodyHome(
-    listSiswa: List<Siswa>,
-    modifier: Modifier = Modifier
-) {
+    itemSiswa: List<Siswa>,
+    modifier: Modifier = Modifier,
+    onSiswaClick: (Int) -> Unit = {} // 3. Terima fungsi di sini
+){
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
-    ) {
-        if (listSiswa.isEmpty()) {
+    ){
+        if (itemSiswa.isEmpty()) {
             Text(
                 text = stringResource(R.string.deskripsi_no_item),
                 textAlign = TextAlign.Center,
@@ -98,8 +105,9 @@ fun BodyHome(
             )
         } else {
             ListSiswa(
-                listSiswa = listSiswa,
-                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
+                itemSiswa = itemSiswa,
+                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small)),
+                onItemClick = onSiswaClick // 4. Teruskan ke ListSiswa
             )
         }
     }
@@ -107,48 +115,47 @@ fun BodyHome(
 
 @Composable
 fun ListSiswa(
-    listSiswa: List<Siswa>,
-    modifier: Modifier = Modifier
-) {
-    LazyColumn(modifier = modifier) {
-        items(items = listSiswa, key = { it.id }) {
-            ItemSiswa(
-                siswa = it,
-                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
+    itemSiswa: List<Siswa>,
+    modifier: Modifier = Modifier,
+    onItemClick: (Int) -> Unit = {} // 5. Terima fungsi di sini
+){
+    LazyColumn(modifier = modifier){
+        items(items = itemSiswa, key = {it.id}){ person ->
+            DataSiswa(
+                siswa = person,
+                modifier = Modifier
+                    .padding(dimensionResource(id = R.dimen.padding_small))
+                    .clickable { onItemClick(person.id) } // 6. Pasang aksi klik disini + kirim ID
             )
         }
     }
 }
 
+// ... DataSiswa (tidak perlu ubah parameter fungsi, cukup Modifier yang dikirim dari ListSiswa di atas) ...
+
+// ... DataSiswa tetap sama ...
 @Composable
-fun ItemSiswa(
+fun DataSiswa(
     siswa: Siswa,
     modifier: Modifier = Modifier
-) {
+){
     Card(
         modifier = modifier,
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
+    ){
+        // ... isi card tetap sama ...
         Column(
-            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
-                .fillMaxWidth(),
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
-        ) {
+        ){
             Row(
                 modifier = Modifier.fillMaxWidth()
-            ) {
+            ){
                 Text(
                     text = siswa.nama,
                     style = MaterialTheme.typography.titleLarge,
                 )
-            }
-            Text(
-                text = siswa.alamat,
-                style = MaterialTheme.typography.titleMedium
-            )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
-            ) {
+                Spacer(Modifier.weight(1f))
                 Icon(
                     imageVector = Icons.Default.Phone,
                     contentDescription = null,
@@ -158,7 +165,10 @@ fun ItemSiswa(
                     style = MaterialTheme.typography.titleMedium
                 )
             }
-
+            Text(
+                text = siswa.alamat,
+                style = MaterialTheme.typography.titleMedium
+            )
         }
     }
 }
