@@ -29,3 +29,10 @@ fun SiswaApp(
     HostNavigasi(navController = navController, modifier = modifier)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HostNavigasi(
+    navController: NavHostController,
+    modifier: Modifier = Modifier
+) {
+}
