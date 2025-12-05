@@ -133,4 +133,15 @@ private fun BodyDetailDataSiswa(
 fun DetailDataSiswa(
     siswa: Siswa, modifier: Modifier = Modifier
 ) {
-}
+    Card(
+        modifier = modifier, colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(id = R.dimen.padding_medium)),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
+        )
