@@ -86,3 +86,11 @@ fun DetailSiswaScreen(
                 viewModel.deleteSiswa()
                 navigateBack()
             }},
+            modifier = Modifier
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
+        )
+    }
+}
+
+
