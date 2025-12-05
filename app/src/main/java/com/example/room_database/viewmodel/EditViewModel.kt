@@ -34,4 +34,15 @@ private val idSiswa: Int = checkNotNull(savedStateHandle[DestinasiDetailSiswa.it
         uiStateSiswa =
             UIStateSiswa(detailSiswa = detailSiswa, isEntryValid = validasiInput(detailSiswa))
     }
+    private fun validasiInput(uiState: DetailSiswa = uiStateSiswa.detailSiswa): Boolean {
+        return with(uiState) {
+            nama.isNotBlank() && alamat.isNotBlank()&& telepon.isNotBlank()
+        }
+    }
+
+    suspend fun updateSiswa() {
+        if (validasiInput(uiStateSiswa.detailSiswa)) {
+            repositoriSiswa.updateSiswa(uiStateSiswa.detailSiswa.toSiswa())
+        }
+    }
 }
